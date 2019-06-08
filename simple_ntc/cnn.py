@@ -71,11 +71,11 @@ class CNNClassifier(nn.Module):
             # because it depends on the length of the sentence.
             # Therefore, we use instant function using 'nn.functional' package.
             # This is the beauty of PyTorch. :)
-            cnn_out = nn.functional.max_pool1d(input=cnn_out.squeeze(-1),
-                                               kernel_size=cnn_out.size(-2)
-                                               ).squeeze(-1)
+            cnn_out = nn.functional.max_pool1d(input=cnn_out.squeeze(-1),    # (bs, #f, l-ws+1)
+                                               kernel_size=cnn_out.size(-2)  # (l+ws+?)
+                                               ).squeeze(-1)                 # (bs, #f, 1 ) → ( bs, #f )
             # |cnn_out| = (batch_size, n_filter)
-            cnn_outs += [cnn_out]
+            cnn_outs += [cnn_out]              # ( bs, #f_3 + #f_4 + #f_5 )
         # Merge output tensors from each convolution layer.
         cnn_outs = torch.cat(cnn_outs, dim=-1)
         # |cnn_outs| = (batch_size, sum(n_filters))
