@@ -108,7 +108,7 @@ def main(config):
             if config.gpu_id >= 0:
                 model.cuda(config.gpu_id)
             # Don't forget turn-on evaluation mode.
-            model.eval()
+            model.eval()   # if forget turn-on, pytorch will run dropout 
 
             y_hat = []
             for idx in range(0, len(lines), config.batch_size):
@@ -118,6 +118,7 @@ def main(config):
             # |y_hat| = (len(lines), n_classes)
 
             y_hats += [y_hat]
+            
         # Merge to one tensor for ensemble result and make probability from log-prob.
         y_hats = torch.stack(y_hats).exp()
         # |y_hats| = (len(ensemble), len(lines), n_classes)
